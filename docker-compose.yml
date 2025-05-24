@@ -3,6 +3,7 @@ version: "3.7"
 services:
     # image project
     app:
+        container_name: app
         build:
             context: .
             dockerfile: Dockerfile
@@ -15,6 +16,7 @@ services:
 
     # nginx
     nginx:
+        container_name: app-nginx
         image: nginx:alpine
         restart: unless-stopped
         ports:
@@ -27,6 +29,7 @@ services:
 
     # db mysql
     db:
+        container_name: app-db
         image: mysql:5.7.22
         platform: linux/x86_64
         restart: unless-stopped
@@ -41,6 +44,17 @@ services:
             - "3308:3306"
         networks:
             - laravel
+
+    frontapp:
+        container_name: app-front
+        build: ./frontend
+        restart: always
+        ports:
+            - "8080:80"
+        volumes:
+            - ./:/var/www
+        depends_on:
+            - app
 networks:
     laravel:
         driver: bridge

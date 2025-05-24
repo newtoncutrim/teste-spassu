@@ -19,5 +19,8 @@ key-generate:
 migrate:
 	$(DOCKER_COMPOSE) exec app $(PHP_ARTISAN) migrate --seed
 
+test:
+	$(DOCKER_COMPOSE) exec app $(PHP_ARTISAN) test
+	
 down:
 	$(DOCKER_COMPOSE) down
