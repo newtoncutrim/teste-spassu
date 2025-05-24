@@ -1,12 +1,12 @@
 
-#Projeto Robo-Api
-Este é um guia passo a passo para configurar e executar o projeto Robo-Api localmente usando Docker.
+#Projeto
+Este é um guia passo a passo para configurar e executar o projeto localmente usando Docker.
 
 Pré-requisitos
 Docker Desktop instalado e configurado na sua máquina.
 Git instalado na sua máquina.
 Instalação
-Clone o repositório do projeto Robo-Api do GitHub:
+Clone o repositório do projeto do GitHub:
 
 ```
 git clone https://github.com/newtoncutrim/teste-spassu.git
