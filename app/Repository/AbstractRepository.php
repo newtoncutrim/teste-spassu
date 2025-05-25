@@ -16,7 +16,7 @@ class AbstractRepository implements InterfaceRepository
     }
     public function index(array $data = [])
     {
-        return $this->model->all();
+        return $this->model->whereNull('deleted_at')->paginate(5);
     }
 
     public function show(int $id)

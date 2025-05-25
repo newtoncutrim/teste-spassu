@@ -95,6 +95,11 @@
                         <ul class="list-group" id="booksList">
                         </ul>
 
+                        <nav>
+                            <ul class="pagination justify-content-center" id="pagination"></ul>
+                        </nav>
+
+
                     </div>
                 </div>
 
@@ -142,7 +147,7 @@
             axios.get(API_AUTHORS)
                 .then(res => {
                     authorsSelect.innerHTML = '';
-                    res.data.data.forEach(author => {
+                    res.data.data.data.forEach(author => {
                         const option = document.createElement('option');
                         option.value = author.id;
                         option.textContent = author.name;
@@ -156,7 +161,7 @@
             axios.get(API_TOPICS)
                 .then(res => {
                     topicsSelect.innerHTML = '';
-                    res.data.data.forEach(topic => {
+                    res.data.data.data.forEach(topic => {
                         const option = document.createElement('option');
                         option.value = topic.id;
                         option.textContent = topic.description;
@@ -166,12 +171,54 @@
                 .catch(() => alert('Erro ao carregar tópicos'));
         }
 
-        function fetchBooks() {
-            axios.get(API_BOOKS).then(res => {
-                    renderBooks(res.data.data);
+        let currentPage = 1;
+        let totalPages = 1;
+
+        function fetchBooks(page = 1) {
+            axios.get(`${API_BOOKS}?page=${page}`)
+                .then(res => {
+                    const books = res.data.data.data;
+        
+                    totalPages = res.data.data.last_page;
+                    currentPage = page;
+                    renderBooks(books);
+                    renderPagination();
                 })
                 .catch(() => alert('Erro ao carregar livros'));
         }
+
+        function renderPagination() {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+
+            const prevLi = document.createElement('li');
+            prevLi.className = 'page-item ' + (currentPage === 1 ? 'disabled' : '');
+            prevLi.innerHTML = `<button class="page-link" aria-label="Anterior">&laquo;</button>`;
+            prevLi.onclick = () => {
+                if (currentPage > 1) fetchBooks(currentPage - 1);
+            };
+            pagination.appendChild(prevLi);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const li = document.createElement('li');
+                li.className = 'page-item ' + (i === currentPage ? 'active' : '');
+                li.innerHTML = `<button class="page-link">${i}</button>`;
+                li.onclick = () => {
+                    fetchBooks(i);
+                };
+                pagination.appendChild(li);
+            }
+
+            const nextLi = document.createElement('li');
+            nextLi.className = 'page-item ' + (currentPage === totalPages ? 'disabled' : '');
+            nextLi.innerHTML = `<button class="page-link" aria-label="Próximo">&raquo;</button>`;
+            nextLi.onclick = () => {
+                if (currentPage < totalPages) fetchBooks(currentPage + 1);
+            };
+            pagination.appendChild(nextLi);
+        }
+
+
 
         function renderBooks(books) {
             booksList.innerHTML = '';
@@ -287,39 +334,67 @@
 
             if (isEditing) {
                 axios.put(`${API_BOOKS}/${editingId}`, data)
+                    .then(() => {
+                        fetchBooks();
+                        resetForm();
+                    })
                     .catch(error => {
                         clearErrors();
                         if (error.response && error.response.status === 422 && error.response.data.errors) {
                             const validationErrors = error.response.data.errors;
-                            for (const field in validationErrors) {
-                                if (errors[field]) {
-                                    errors[field].textContent = validationErrors[field].join(' ');
-                                }
+                            if (validationErrors) {
+                                if (validationErrors.title) errors.title.textContent = validationErrors.title[
+                                    0];
+                                if (validationErrors.publisher) errors.publisher.textContent = validationErrors
+                                    .publisher[0];
+                                if (validationErrors.year_of_publication) errors.year.textContent =
+                                    validationErrors.year_of_publication[0];
+                                if (validationErrors.price) errors.price.textContent = validationErrors.price[
+                                    0];
+                                if (validationErrors.edition) errors.edition.textContent = validationErrors
+                                    .edition[0];
+                                if (validationErrors.authors) errors.authors.textContent = validationErrors
+                                    .authors[0];
+                                if (validationErrors.topics) errors.topics.textContent = validationErrors
+                                    .topics[0];
                             }
                         } else {
-                            errors.title.textContent = error.response?.data?.message ||
-                                'Erro ao atualizar livro.';
+                            alert('Erro ao atualizar o livro');
                         }
-                        console.error(error);
                     });
             } else {
                 axios.post(API_BOOKS, data)
+                    .then(() => {
+                        fetchBooks();
+                        resetForm();
+                    })
                     .catch(error => {
                         clearErrors();
+                        console.error(error);
                         if (error.response && error.response.status === 422 && error.response.data.errors) {
                             const validationErrors = error.response.data.errors;
-                            for (const field in validationErrors) {
-                                if (errors[field]) {
-                                    errors[field].textContent = validationErrors[field].join(' ');
-                                }
+                            if (validationErrors) {
+                                if (validationErrors.title) errors.title.textContent = validationErrors.title[
+                                    0];
+                                if (validationErrors.publisher) errors.publisher.textContent = validationErrors
+                                    .publisher[0];
+                                if (validationErrors.year_of_publication) errors.year.textContent =
+                                    validationErrors.year_of_publication[0];
+                                if (validationErrors.price) errors.price.textContent = validationErrors.price[
+                                    0];
+                                if (validationErrors.edition) errors.edition.textContent = validationErrors
+                                    .edition[0];
+                                if (validationErrors.authors) errors.authors.textContent = validationErrors
+                                    .authors[0];
+                                if (validationErrors.topics) errors.topics.textContent = validationErrors
+                                    .topics[0];
                             }
                         } else {
-                            errors.title.textContent = error.response?.data?.message ||
-                                'Erro ao cadastrar livro.';
+                            alert('Erro ao cadastrar o livro');
                         }
-                        console.error(error);
                     });
             }
+
 
         });
 

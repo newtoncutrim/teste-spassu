@@ -42,6 +42,8 @@
                         <ul class="list-group" id="authorsList">
                         </ul>
 
+                        <div id="pagination" class="d-flex justify-content-center mt-3"></div>
+
                     </div>
                 </div>
 
@@ -58,14 +60,18 @@
         const submitBtn = document.getElementById('submitBtn');
         const cancelEditBtn = document.getElementById('cancelEditBtn');
         const authorsList = document.getElementById('authorsList');
+        const pagination = document.getElementById('pagination');
 
         let isEditing = false;
         let editingId = null;
+        let currentPage = 1;
 
-        function fetchAuthors() {
-            axios.get(API_URL)
+        function fetchAuthors(page = 1) {
+            axios.get(`${API_URL}?page=${page}`)
                 .then(response => {
-                    renderAuthors(response.data.data || []);
+                    const data = response.data.data;
+                    renderAuthors(data.data);
+                    renderPagination(data);
                 })
                 .catch(error => {
                     alert('Erro ao carregar autores.');
@@ -103,6 +109,36 @@
 
                 li.appendChild(btnGroup);
                 authorsList.appendChild(li);
+            });
+        }
+
+        function renderPagination(meta) {
+            pagination.innerHTML = '';
+
+            const {
+                current_page,
+                last_page,
+                links
+            } = meta;
+
+            links.forEach(link => {
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-sm mx-1 ' + (link.active ? 'btn-primary' : 'btn-outline-primary');
+                btn.innerHTML = link.label.replace('&laquo;', '«').replace('&raquo;', '»');
+
+                if (link.url) {
+                    const url = new URL(link.url);
+                    const page = url.searchParams.get('page');
+
+                    btn.onclick = () => {
+                        currentPage = parseInt(page);
+                        fetchAuthors(currentPage);
+                    };
+                } else {
+                    btn.disabled = true;
+                }
+
+                pagination.appendChild(btn);
             });
         }
 
@@ -192,7 +228,11 @@
             nameError.textContent = '';
         }
 
-        fetchAuthors();
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAuthors();
+            fetchTopics();
+            fetchBooks();
+        });
     </script>
 </body>
 

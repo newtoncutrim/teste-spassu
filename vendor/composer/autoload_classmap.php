@@ -31,7 +31,7 @@ return array(
     'App\\Services\\AuthorService' => $baseDir . '/app/Services/AuthorService.php',
     'App\\Services\\BookService' => $baseDir . '/app/Services/BookService.php',
     'App\\Services\\TopicService' => $baseDir . '/app/Services/TopicService.php',
-    'App\\Traits\\CrudTrait' => $baseDir . '/app/Traits/CrudTrait.php',
+    'App\\Traits\\ApiBaseTrait' => $baseDir . '/app/Traits/ApiBaseTrait.php',
     'App\\Traits\\ResponseTrait' => $baseDir . '/app/Traits/ResponseTrait.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'Brick\\Math\\BigDecimal' => $vendorDir . '/brick/math/src/BigDecimal.php',

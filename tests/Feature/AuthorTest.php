@@ -23,7 +23,12 @@ class AuthorTest extends TestCase
                 'success',
                 'message',
                 'data' => [
-                    '*' => ['id', 'name', 'created_at', 'updated_at']
+                    'current_page',
+                    'data' => [
+                            [
+                                'id', 'name', 'created_at', 'updated_at'
+                            ]
+                        ],
                 ]
             ]);
     }

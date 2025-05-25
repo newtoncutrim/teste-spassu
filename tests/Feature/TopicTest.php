@@ -11,6 +11,30 @@ class TopicTest extends TestCase
 {
     use RefreshDatabase;
 
+    /** @test Testa se é possível listar os autores cadastrados */
+    public function test_it_can_list_authors()
+    {
+        Topic::factory()->count(3)->create();
+
+        $response = $this->getJson(route('topics.index'));
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'current_page',
+                    'data' => [
+                        [
+                            'id',
+                            'description',
+                            'created_at',
+                            'updated_at'
+                        ]
+                    ],
+                ]
+            ]);
+    }
     /** @test Valida que não é possível criar um tópico sem descrição */
     public function test_fail_to_create_topic_without_description()
     {

@@ -546,7 +546,7 @@ class ComposerStaticInit88970a0117c062eed55fa8728fc43833
         'App\\Services\\AuthorService' => __DIR__ . '/../..' . '/app/Services/AuthorService.php',
         'App\\Services\\BookService' => __DIR__ . '/../..' . '/app/Services/BookService.php',
         'App\\Services\\TopicService' => __DIR__ . '/../..' . '/app/Services/TopicService.php',
-        'App\\Traits\\CrudTrait' => __DIR__ . '/../..' . '/app/Traits/CrudTrait.php',
+        'App\\Traits\\ApiBaseTrait' => __DIR__ . '/../..' . '/app/Traits/ApiBaseTrait.php',
         'App\\Traits\\ResponseTrait' => __DIR__ . '/../..' . '/app/Traits/ResponseTrait.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Brick\\Math\\BigDecimal' => __DIR__ . '/..' . '/brick/math/src/BigDecimal.php',

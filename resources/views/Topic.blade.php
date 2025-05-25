@@ -42,6 +42,12 @@
 
                         </ul>
 
+                        <nav>
+                            <ul class="pagination justify-content-center" id="pagination">
+                            </ul>
+                        </nav>
+
+
                     </div>
                 </div>
 
@@ -63,17 +69,61 @@
         let isEditing = false;
         let editingId = null;
 
-        function fetchTopics() {
-            axios.get(API_URL)
+        function fetchTopics(page = 1) {
+            axios.get(`${API_URL}?page=${page}`)
                 .then(response => {
-                    const topics = response.data.data;
+                    const topics = response.data.data.data;
+                    const pagination = {
+                        current_page: response.data.data.current_page,
+                        last_page: response.data.data.last_page
+                    };
                     renderTopics(topics);
+                    renderPagination(pagination);
                 })
                 .catch(error => {
                     alert('Erro ao carregar tópicos.');
                     console.error(error);
                 });
         }
+
+
+        function renderPagination({
+            current_page,
+            last_page
+        }) {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+
+            const prevLi = document.createElement('li');
+            prevLi.className = `page-item ${current_page === 1 ? 'disabled' : ''}`;
+            prevLi.innerHTML = `<a class="page-link" href="#">Anterior</a>`;
+            prevLi.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (current_page > 1) fetchTopics(current_page - 1);
+            });
+            pagination.appendChild(prevLi);
+
+            for (let i = 1; i <= last_page; i++) {
+                const li = document.createElement('li');
+                li.className = `page-item ${i === current_page ? 'active' : ''}`;
+                li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                li.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    fetchTopics(i);
+                });
+                pagination.appendChild(li);
+            }
+
+            const nextLi = document.createElement('li');
+            nextLi.className = `page-item ${current_page === last_page ? 'disabled' : ''}`;
+            nextLi.innerHTML = `<a class="page-link" href="#">Próximo</a>`;
+            nextLi.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (current_page < last_page) fetchTopics(current_page + 1);
+            });
+            pagination.appendChild(nextLi);
+        }
+
 
         function renderTopics(topics) {
             topicsList.innerHTML = '';

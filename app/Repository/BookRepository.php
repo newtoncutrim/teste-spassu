@@ -53,7 +53,7 @@ class BookRepository extends AbstractRepository
 
     public function getAllWithRelations()
     {
-        return $this->model->with(['authors', 'topics'])->get();
+        return $this->model->with(['authors', 'topics'])->paginate(3);
     }
 
     public function findByIdWithRelations(int $id)
