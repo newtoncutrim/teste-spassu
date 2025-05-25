@@ -1,8 +1,7 @@
-
 DOCKER_COMPOSE = docker compose
 PHP_ARTISAN = php artisan
 
-setup: up composer-install create-env key-generate migrate
+setup: up composer-install create-env key-generate
 
 up:
 	$(DOCKER_COMPOSE) up -d
@@ -21,6 +20,6 @@ migrate:
 
 test:
 	$(DOCKER_COMPOSE) exec app $(PHP_ARTISAN) test
-	
+
 down:
 	$(DOCKER_COMPOSE) down

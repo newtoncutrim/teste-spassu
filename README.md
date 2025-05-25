@@ -17,19 +17,7 @@ cd teste-spassu
 ```
 Execute o seguinte comando para iniciar os contêineres Docker e construir as imagens:
 ```
-docker compose up -d --build
-```
-Instale as dependências do Composer executando o seguinte comando:
-```
-docker compose exec app composer install
-```
-Copie o arquivo de ambiente de exemplo .env.example para .env:
-```
-docker compose exec app cp .env.example .env
-```
-Gere a chave de criptografia do Laravel executando o seguinte comando:
-```
-docker compose exec app php artisan key:generate
+make setup
 ```
 Configure o banco de dados no arquivo .env com as seguintes credenciais:
 ```
@@ -42,9 +30,26 @@ DB_PASSWORD=root
 ```
 Execute as migrações do banco de dados com o seguinte comando:
 ```
-docker compose exec app php artisan migrate
+make migrate
 ```
+Execute os teste da api com o seguinte comando:
+```
+make test
+```
+
 Acesso Local
 Depois de seguir as etapas acima, você pode acessar o projeto teste-spassu localmente no seguinte endereço:
 
 http://localhost:9000/
+
+
+## 🖼️ Screenshots
+
+### Testes
+![Testes](./readme-images/Testes.png)
+
+### Livros
+![Livros](./readme-images/Livros.png)
+
+### Relatorio
+![Relatorio](./readme-images/Relatorio.png)

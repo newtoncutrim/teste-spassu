@@ -44,17 +44,6 @@ services:
             - "3308:3306"
         networks:
             - laravel
-
-    frontapp:
-        container_name: app-front
-        build: ./frontend
-        restart: always
-        ports:
-            - "8080:80"
-        volumes:
-            - ./:/var/www
-        depends_on:
-            - app
 networks:
     laravel:
         driver: bridge
