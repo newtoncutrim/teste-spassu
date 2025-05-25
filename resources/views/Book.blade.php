@@ -6,6 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Cadastro de Livro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875em;
+            margin-top: 0.25rem;
+        }
+    </style>
 </head>
 
 <body class="bg-light">
@@ -20,56 +27,64 @@
                     <div class="card-body">
                         <h4 class="card-title mb-4 text-center">Cadastro de Livro</h4>
 
-                        <form id="bookForm">
+                        <form id="bookForm" novalidate>
 
                             <div class="mb-3">
                                 <label for="title" class="form-label">Título</label>
                                 <input type="text" id="title" class="form-control"
-                                    placeholder="Digite o título do livro" required />
+                                    placeholder="Digite o título do livro" />
+                                <div class="error-message" id="titleError"></div>
                             </div>
 
                             <div class="mb-3">
                                 <label for="publisher" class="form-label">Editora</label>
-                                <input type="text" id="publisher" class="form-control" placeholder="Digite a editora"
-                                    required />
+                                <input type="text" id="publisher" class="form-control"
+                                    placeholder="Digite a editora" />
+                                <div class="error-message" id="publisherError"></div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-4 mb-3">
                                     <label for="year_of_publication" class="form-label">Ano de Publicação</label>
                                     <input type="number" id="year_of_publication" class="form-control"
-                                        placeholder="2024" min="1900" max="2100" required />
+                                        placeholder="2024" min="1900" max="2100" />
+                                    <div class="error-message" id="yearError"></div>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="price" class="form-label">Preço (R$)</label>
                                     <input type="number" id="price" class="form-control" placeholder="99.90"
-                                        step="0.01" min="0" required />
+                                        step="0.01" min="0" />
+                                    <div class="error-message" id="priceError"></div>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="edition" class="form-label">Edição</label>
                                     <input type="number" id="edition" class="form-control" placeholder="2"
-                                        min="1" required />
+                                        min="1" />
+                                    <div class="error-message" id="editionError"></div>
                                 </div>
                             </div>
 
                             <div class="mb-3">
                                 <label for="authors" class="form-label">Autores</label>
-                                <select id="authors" class="form-select" multiple required></select>
+                                <select id="authors" class="form-select" multiple></select>
                                 <small class="form-text text-muted">Segure Ctrl (Cmd) para selecionar múltiplos
                                     autores.</small>
+                                <div class="error-message" id="authorsError"></div>
                             </div>
 
                             <div class="mb-3">
                                 <label for="topics" class="form-label">Tópicos</label>
-                                <select id="topics" class="form-select" multiple required></select>
+                                <select id="topics" class="form-select" multiple></select>
                                 <small class="form-text text-muted">Segure Ctrl (Cmd) para selecionar múltiplos
                                     tópicos.</small>
+                                <div class="error-message" id="topicsError"></div>
                             </div>
 
                             <div class="d-flex flex-column flex-md-row justify-content-between gap-2">
                                 <button type="submit" class="btn btn-primary w-100" id="submitBtn">Cadastrar</button>
                                 <button type="button" class="btn btn-secondary w-100 d-none"
-                                    id="cancelEditBtn">Cancelar Edição</button>
+                                    id="cancelEditBtn">Cancelar
+                                    Edição</button>
                             </div>
 
                         </form>
@@ -106,8 +121,22 @@
         const cancelEditBtn = document.getElementById('cancelEditBtn');
         const booksList = document.getElementById('booksList');
 
+        const errors = {
+            title: document.getElementById('titleError'),
+            publisher: document.getElementById('publisherError'),
+            year: document.getElementById('yearError'),
+            price: document.getElementById('priceError'),
+            edition: document.getElementById('editionError'),
+            authors: document.getElementById('authorsError'),
+            topics: document.getElementById('topicsError'),
+        };
+
         let isEditing = false;
         let editingId = null;
+
+        function clearErrors() {
+            Object.values(errors).forEach(errEl => errEl.textContent = '');
+        }
 
         function fetchAuthors() {
             axios.get(API_AUTHORS)
@@ -140,9 +169,9 @@
         function fetchBooks() {
             axios.get(API_BOOKS).then(res => {
                     renderBooks(res.data.data);
-                    console.log(res.data.data);
                 })
-                .catch(() => alert('Erro ao carregar livros')); }
+                .catch(() => alert('Erro ao carregar livros'));
+        }
 
         function renderBooks(books) {
             booksList.innerHTML = '';
@@ -181,6 +210,7 @@
             isEditing = false;
             editingId = null;
             bookForm.reset();
+            clearErrors();
             submitBtn.textContent = 'Cadastrar';
             cancelEditBtn.classList.add('d-none');
         }
@@ -188,7 +218,8 @@
         window.startEditBook = function(id) {
             axios.get(`${API_BOOKS}/${id}`)
                 .then(res => {
-                    const book = res.data;
+                    const book = res.data.data;
+
                     isEditing = true;
                     editingId = id;
                     titleInput.value = book.title;
@@ -207,6 +238,7 @@
 
                     submitBtn.textContent = 'Atualizar';
                     cancelEditBtn.classList.remove('d-none');
+                    clearErrors();
                 })
                 .catch(() => alert('Erro ao carregar dados do livro'));
         };
@@ -214,6 +246,12 @@
         cancelEditBtn.addEventListener('click', () => {
             resetForm();
         });
+
+        function parseIfNumber(value) {
+            const trimmed = value.trim();
+            return !isNaN(trimmed) && trimmed !== '' ? Number(trimmed) : trimmed;
+        }
+
 
         window.deleteBook = function(id) {
             if (!confirm('Deseja realmente excluir este livro?')) return;
@@ -228,19 +266,14 @@
         bookForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const title = titleInput.value.trim();
-            const publisher = publisherInput.value.trim();
+            const title = parseIfNumber(titleInput.value);
+            const publisher = parseIfNumber(publisherInput.value);
             const year_of_publication = parseInt(yearInput.value);
             const price = parseFloat(priceInput.value);
             const edition = parseInt(editionInput.value);
             const authors = Array.from(authorsSelect.selectedOptions).map(opt => Number(opt.value));
             const topics = Array.from(topicsSelect.selectedOptions).map(opt => Number(opt.value));
 
-            if (!title || !publisher || !year_of_publication || !price || !edition || authors.length === 0 || topics
-                .length === 0) {
-                alert('Por favor, preencha todos os campos corretamente.');
-                return;
-            }
 
             const data = {
                 title,
@@ -254,19 +287,40 @@
 
             if (isEditing) {
                 axios.put(`${API_BOOKS}/${editingId}`, data)
-                    .then(() => {
-                        fetchBooks();
-                        resetForm();
-                    })
-                    .catch(() => alert('Erro ao atualizar livro'));
+                    .catch(error => {
+                        clearErrors();
+                        if (error.response && error.response.status === 422 && error.response.data.errors) {
+                            const validationErrors = error.response.data.errors;
+                            for (const field in validationErrors) {
+                                if (errors[field]) {
+                                    errors[field].textContent = validationErrors[field].join(' ');
+                                }
+                            }
+                        } else {
+                            errors.title.textContent = error.response?.data?.message ||
+                                'Erro ao atualizar livro.';
+                        }
+                        console.error(error);
+                    });
             } else {
                 axios.post(API_BOOKS, data)
-                    .then(() => {
-                        fetchBooks();
-                        bookForm.reset();
-                    })
-                    .catch(() => alert('Erro ao cadastrar livro'));
+                    .catch(error => {
+                        clearErrors();
+                        if (error.response && error.response.status === 422 && error.response.data.errors) {
+                            const validationErrors = error.response.data.errors;
+                            for (const field in validationErrors) {
+                                if (errors[field]) {
+                                    errors[field].textContent = validationErrors[field].join(' ');
+                                }
+                            }
+                        } else {
+                            errors.title.textContent = error.response?.data?.message ||
+                                'Erro ao cadastrar livro.';
+                        }
+                        console.error(error);
+                    });
             }
+
         });
 
         fetchAuthors();

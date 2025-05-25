@@ -18,7 +18,7 @@ class BookService
     }
 
     public function findById(int $id) {
-        return $this->repository->show($id);
+        return $this->repository->findByIdWithRelations($id);
     }
 
     public function update(int $id, array $data) {

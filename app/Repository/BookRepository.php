@@ -55,4 +55,9 @@ class BookRepository extends AbstractRepository
     {
         return $this->model->with(['authors', 'topics'])->get();
     }
+
+    public function findByIdWithRelations(int $id)
+    {
+        return $this->model->with(['authors', 'topics'])->findOrFail($id);
+    }
 }
