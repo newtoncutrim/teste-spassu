@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Topic;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateTopicRequest extends FormRequest
 {
@@ -22,7 +23,15 @@ class UpdateTopicRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'description' => 'required|string|max:20',
+            'description' => [
+                'required',
+                'string',
+                'max:20',
+                'min:3',
+                Rule::unique('topics', 'description')
+                    ->ignore($this->route('topic'))
+                    ->whereNull('deleted_at'),
+            ],
         ];
     }
 
@@ -32,6 +41,8 @@ class UpdateTopicRequest extends FormRequest
             'description.required' => 'O campo descricao é obrigatório.',
             'description.string' => 'O campo descricao deve ser um texto.',
             'description.max' => 'O campo descricao não pode ter mais que 20 caracteres.',
+            'description.min' => 'O campo descricao deve ter no mínimo 3 caracteres.',
+            'description.unique' => 'Já existe um tópico com essa descrição.',
         ];
     }
 }

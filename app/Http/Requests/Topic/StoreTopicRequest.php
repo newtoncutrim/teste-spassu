@@ -45,6 +45,7 @@ class StoreTopicRequest extends FormRequest
             'description.max' => 'O campo descricao não pode ter mais que 20 caracteres.',
             'topics.*.exists' => 'O tópico selecionado não existe ou foi removido.',
             'description.min' => 'O campo descricao deve ter no mínimo 3 caracteres.',
+            'description.unique' => 'Já existe um tópico com essa descrição.',
         ];
     }
 }

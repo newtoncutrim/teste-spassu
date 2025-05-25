@@ -185,7 +185,8 @@
                     fetchTopics();
                 })
                 .catch(error => {
-                    alert('Erro ao excluir tópico.');
+                    const message = error.response?.data?.message || 'Erro ao atualizar tópico.';
+                    alert(message);
                     console.error(error);
                 });
         }
