@@ -11,7 +11,6 @@ use App\Traits\ResponseTrait;
 
 class AuthorService
 {
-    use ResponseTrait;
 
     public function __construct(private AuthorRepository $repository) {}
 
