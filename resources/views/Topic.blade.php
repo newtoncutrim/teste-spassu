@@ -86,7 +86,6 @@
                 });
         }
 
-
         function renderPagination({
             current_page,
             last_page
