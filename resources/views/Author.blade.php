@@ -133,7 +133,7 @@
                 })
                 .catch(error => {
                     const message = error.response?.data?.message || 'Erro ao excluir autor.';
-                    showError(message);
+                    alert(message);
                     console.error(error);
                 });
         }

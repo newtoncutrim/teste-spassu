@@ -49,31 +49,32 @@
             });
         }
 
-        function renderSummary(authors) {
-            const totalAuthors = authors.length;
-            let totalBooks = 0;
-            let topicsSet = new Set();
+        function renderSummary() {
+            const API_AUTHORS_COUNT = '/api/totalauthors';
+            const API_BOOKS_COUNT = '/api/totalbooks';
+            const API_TOPICS_COUNT = '/api/totaltopics';
 
-            authors.forEach(author => {
-                if (author.books && author.books.length) {
-                    totalBooks += author.books.length;
+            Promise.all([
+                    axios.get(API_AUTHORS_COUNT),
+                    axios.get(API_BOOKS_COUNT),
+                    axios.get(API_TOPICS_COUNT),
+                ])
+                .then(([authorsRes, booksRes, topicsRes]) => {
+                    const totalAuthors = authorsRes.data.data;
+                    const totalBooks = booksRes.data.data;
+                    const totalTopics = topicsRes.data.data;
 
-                    author.books.forEach(book => {
-                        if (book.topics && book.topics.length) {
-                            book.topics.forEach(t => topicsSet.add(t.description));
-                        }
-                    });
-                }
-            });
-
-            const totalTopics = topicsSet.size;
-
-            summary.innerHTML = `
-                <p><strong>Total de Autores:</strong> ${totalAuthors} | 
-                <strong>Total de Livros:</strong> ${totalBooks} | 
-                <strong>Total de Assuntos:</strong> ${totalTopics}</p>
-            `;
+                    summary.innerHTML = `
+            <p><strong>Total de Autores:</strong> ${totalAuthors} | 
+            <strong>Total de Livros:</strong> ${totalBooks} | 
+            <strong>Total de Assuntos:</strong> ${totalTopics}</p>
+        `;
+                })
+                .catch(() => {
+                    alert('Erro ao carregar o resumo dos dados');
+                });
         }
+
 
         function renderAuthors(authors) {
             if (!authors.length) {
