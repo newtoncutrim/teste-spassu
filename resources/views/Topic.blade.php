@@ -191,9 +191,19 @@
                 });
         }
 
-        function showError(message) {
-            descriptionError.textContent = message;
+        function showError(messages) {
+            let data = messages.response?.data.errors.description || messages;
+            if (Array.isArray(data)) {
+                descriptionError.innerHTML = data.map(msg => `<div>${msg}</div>`).join('');
+            } else {
+                descriptionError.textContent = data;
+            }
+
+            setTimeout(() => {
+                clearError();
+            }, 10000);
         }
+
 
         function clearError() {
             descriptionError.textContent = '';
@@ -222,7 +232,7 @@
                         resetForm();
                     })
                     .catch(error => {
-                        const message = error.response?.data?.message || 'Erro ao atualizar tópico.';
+                        const message = error || 'Erro ao atualizar tópico.';
                         showError(message);
                         console.error(error);
                     });
@@ -235,7 +245,7 @@
                         descriptionInput.value = '';
                     })
                     .catch(error => {
-                        const message = error.response?.data?.message || 'Erro ao cadastrar tópico.';
+                        const message = error || 'Erro ao cadastrar tópico.';
                         showError(message);
                         console.error(error);
                     });

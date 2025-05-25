@@ -168,8 +168,8 @@
                     fetchAuthors();
                 })
                 .catch(error => {
-                    const message = error.response?.data?.message || 'Erro ao excluir autor.';
-                    alert(message);
+                    const message = error || 'Erro ao excluir autor.';
+                    showError(message);
                     console.error(error);
                 });
         }
@@ -198,7 +198,7 @@
                         resetForm();
                     })
                     .catch(error => {
-                        const message = error.response?.data?.message || 'Erro ao excluir autor.';
+                        const message = error || 'Erro ao atualizar autor.';
                         showError(message);
                         console.error(error);
                     });
@@ -211,7 +211,7 @@
                         nameInput.value = '';
                     })
                     .catch(error => {
-                        const message = error.response?.data?.message || 'Erro ao excluir autor.';
+                        const message = error || 'Erro ao cadastrar autor.';
                         showError(message);
                         console.error(error);
                     });
@@ -220,8 +220,17 @@
 
         const nameError = document.getElementById('nameError');
 
-        function showError(message) {
-            nameError.textContent = message;
+        function showError(messages) {
+            let data = messages.response?.data.errors.name || messages;
+            if (Array.isArray(data)) {
+                nameError.innerHTML = data.map(msg => `<div>${msg}</div>`).join('');
+            } else {
+                nameError.textContent = data;
+            }
+
+            setTimeout(() => {
+                clearError();
+            }, 10000);
         }
 
         function clearError() {
@@ -230,8 +239,6 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             fetchAuthors();
-            fetchTopics();
-            fetchBooks();
         });
     </script>
 </body>

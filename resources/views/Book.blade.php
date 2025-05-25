@@ -143,6 +143,10 @@
             Object.values(errors).forEach(errEl => errEl.textContent = '');
         }
 
+        setTimeout(() => {
+            clearErrors();
+        }, 10000);
+
         function fetchAuthors() {
             axios.get(API_AUTHORS)
                 .then(res => {
@@ -178,7 +182,7 @@
             axios.get(`${API_BOOKS}?page=${page}`)
                 .then(res => {
                     const books = res.data.data.data;
-        
+
                     totalPages = res.data.data.last_page;
                     currentPage = page;
                     renderBooks(books);

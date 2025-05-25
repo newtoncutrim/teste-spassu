@@ -40,7 +40,7 @@ class StoreAuthorRequest extends FormRequest
         return [
             'name.required' => 'O campo nome é obrigatório.',
             'name.string' => 'O campo nome deve ser um texto.',
-            'name.max' => 'O campo nome não pode ter mais que 255 caracteres.',
+            'name.max' => 'O campo nome não pode ter mais que 40 caracteres.',
             'name.min' => 'O campo nome deve ter no mínimo 3 caracteres.',
             'name.unique' => 'Já existe um autor com esse nome.',
         ];
