@@ -14,7 +14,7 @@ class AbstractRepository implements InterfaceRepository
     {
         return $this->model->whereNull('deleted_at')->count();
     }
-    public function index(array $data = [])
+    public function index()
     {
         return $this->model->whereNull('deleted_at')->paginate(5);
     }
