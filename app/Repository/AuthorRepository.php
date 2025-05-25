@@ -16,6 +16,6 @@ class AuthorRepository extends AbstractRepository
     {
         return $this->model
             ->with(['books.topics'])
-            ->get();
+            ->paginate(3);
     }
 }

@@ -15,6 +15,10 @@ class AuthorService
 
     public function __construct(private AuthorRepository $repository) {}
 
+    public function count()
+    {
+        return $this->repository->count();
+    }
     public function getAll()
     {
         return $this->repository->index();
@@ -45,7 +49,7 @@ class AuthorService
         $author = Author::find($id);
 
         if ($author->books()->count() > 0) {
-    
+
             throw new CannotDeleteResourceWithRelationsException('Não é possível excluir um autor que possui livros cadastrados.');
         }
 

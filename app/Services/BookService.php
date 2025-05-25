@@ -6,27 +6,34 @@ use App\Repository\BookRepository;
 
 class BookService
 {
-    public function __construct(private BookRepository $repository) 
-    {}
+    public function __construct(private BookRepository $repository) {}
 
-    public function getAll() {
+    public function count()
+    {
+        return $this->repository->count();
+    }
+    public function getAll()
+    {
         return $this->repository->getAllWithRelations();
     }
 
-    public function create(array $data) {
+    public function create(array $data)
+    {
         return $this->repository->createWithRelations($data);
     }
 
-    public function findById(int $id) {
+    public function findById(int $id)
+    {
         return $this->repository->findByIdWithRelations($id);
     }
 
-    public function update(int $id, array $data) {
+    public function update(int $id, array $data)
+    {
         return $this->repository->updateWithRelations($id, $data);
     }
 
-    public function delete(int $id) {
+    public function delete(int $id)
+    {
         return $this->repository->delete($id);
     }
 }
-

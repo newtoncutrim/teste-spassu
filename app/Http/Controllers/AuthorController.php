@@ -5,12 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Author\StoreAuthorRequest;
 use App\Http\Requests\Author\UpdateAuthorRequest;
 use App\Services\AuthorService;
-use App\Traits\CrudTrait;
+use App\Traits\ApiBaseTrait;
 use App\Traits\ResponseTrait;
 
 class AuthorController extends Controller
 {
-    use CrudTrait;
+    use ApiBaseTrait;
     use ResponseTrait;
 
     public function __construct(AuthorService $service)

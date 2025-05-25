@@ -7,11 +7,16 @@ use App\Models\Topic;
 use App\Repository\TopicRepository;
 use App\Traits\ResponseTrait;
 use App\Exceptions\RuntimeException;
+
 class TopicService
 {
     use ResponseTrait;
     public function __construct(private TopicRepository $repository) {}
 
+    public function count()
+    {
+        return $this->repository->count();
+    }
     public function getAll()
     {
         return $this->repository->index();

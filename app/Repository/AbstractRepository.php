@@ -10,6 +10,10 @@ class AbstractRepository implements InterfaceRepository
 {
     protected $model;
 
+    public function count()
+    {
+        return $this->model->whereNull('deleted_at')->count();
+    }
     public function index(array $data = [])
     {
         return $this->model->all();

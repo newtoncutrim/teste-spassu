@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Book\StoreBookRequest;
 use App\Http\Requests\Book\UpdateBookRequest;
 use App\Services\BookService;
-use App\Traits\CrudTrait;
+use App\Traits\ApiBaseTrait;
 
 class BookController extends Controller
 {
-    use CrudTrait;
+    use ApiBaseTrait;
 
     public function __construct(BookService $service)
     {

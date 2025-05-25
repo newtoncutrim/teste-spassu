@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Topic\StoreTopicRequest;
 use App\Http\Requests\Topic\UpdateTopicRequest;
 use App\Services\TopicService;
-use App\Traits\CrudTrait;
+use App\Traits\ApiBaseTrait;
 
 class TopicController extends Controller
 {
-    use CrudTrait;
+    use ApiBaseTrait;
 
     public function __construct(TopicService $service)
     {

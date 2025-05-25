@@ -53,54 +53,65 @@ class BookTest extends TestCase
 
         $response->assertStatus(Response::HTTP_OK);
 
-        // Debug opcional
-        // dd($response->json());
-
         $response->assertJsonStructure([
             'success',
             'message',
             'data' => [
-                '*' => [  // <- indica que 'data' é uma lista de autores
-                    'id',
-                    'name',
-                    'deleted_at',
-                    'created_at',
-                    'updated_at',
-                    'books' => [
-                        '*' => [
-                            'id',
-                            'title',
-                            'publisher',
-                            'edition',
-                            'year_of_publication',
-                            'price',
-                            'deleted_at',
-                            'created_at',
-                            'updated_at',
-                            'pivot' => [
-                                'author_id',
-                                'book_id',
-                            ],
-                            'topics' => [
-                                '*' => [
-                                    'id',
-                                    'description',
-                                    'deleted_at',
-                                    'created_at',
-                                    'updated_at',
-                                    'pivot' => [
-                                        'book_id',
-                                        'topic_id',
+                'current_page',
+                'data' => [
+                    '*' => [
+                        'id',
+                        'name',
+                        'deleted_at',
+                        'created_at',
+                        'updated_at',
+                        'books' => [
+                            '*' => [
+                                'id',
+                                'title',
+                                'publisher',
+                                'edition',
+                                'year_of_publication',
+                                'price',
+                                'deleted_at',
+                                'created_at',
+                                'updated_at',
+                                'pivot' => [
+                                    'author_id',
+                                    'book_id',
+                                ],
+                                'topics' => [
+                                    '*' => [
+                                        'id',
+                                        'description',
+                                        'deleted_at',
+                                        'created_at',
+                                        'updated_at',
+                                        'pivot' => [
+                                            'book_id',
+                                            'topic_id',
+                                        ],
                                     ],
                                 ],
                             ],
                         ],
                     ],
                 ],
+                'first_page_url',
+                'from',
+                'last_page',
+                'last_page_url',
+                'links',
+                'next_page_url',
+                'path',
+                'per_page',
+                'prev_page_url',
+                'to',
+                'total',
             ],
         ]);
 
-        // Validação de conteúdo específico
+
         $response->assertJsonFragment([
             'id' => $author->id,
             'name' => $author->name,

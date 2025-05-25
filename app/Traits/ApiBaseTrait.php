@@ -6,7 +6,7 @@ use App\Exceptions\CannotDeleteResourceWithRelationsException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 
-trait CrudTrait
+trait ApiBaseTrait
 {
     use ResponseTrait;
 
@@ -15,6 +15,10 @@ trait CrudTrait
     protected  $storeRequestClass = null;
     protected  $updateRequestClass = null;
 
+    public function count(){
+        $count = $this->service->count();
+        return $this->success($count, 'Count retrieved successfully');
+    }
     public function index()
     {
         $data = $this->service->getAll();
